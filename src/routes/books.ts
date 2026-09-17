@@ -13,16 +13,12 @@ router.get('/', (req: Request, res: Response) => {
 
 router.get('/books/search', (req: Request, res: Response) => {
   const db = getDb();
-  const query = req.query.q as string;
-  
-  // TODO: Implement search functionality
-  // This is a deliberate homework gap - agents should implement the search backend
-  // For now, return empty results with a message
-  res.send(`
-    <div class="search-message">
-      <p>Search functionality coming soon! This is a homework exercise for agents to implement.</p>
-    </div>
-  `);
+  const query = typeof req.query.q === 'string' ? req.query.q.trim() : '';
+
+  // An empty query means the search box was cleared: show the full list again.
+  const books = query ? Book.searchBooks(db, query) : Book.getAllBooks(db);
+
+  res.render('books/search-results', { books, query });
 });
 
 router.get('/books/:id', (req: Request, res: Response) => {

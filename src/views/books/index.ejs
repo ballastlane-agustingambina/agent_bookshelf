@@ -17,17 +17,7 @@
 </div>
 
 <div id="search-results">
-  <div class="book-grid">
-    <% books.forEach(book => { %>
-      <div class="book-card">
-        <h2><a href="/books/<%= book.id %>"><%= book.title %></a></h2>
-        <p class="author">by <%= book.author %></p>
-        <% if (book.published_year) { %>
-          <p class="year"><%= book.published_year %></p>
-        <% } %>
-      </div>
-    <% }) %>
-  </div>
+  <%- include('search-results', { books, query: '' }) %>
 </div>
 
 <%- include('../partials/footer') %>

@@ -1,3 +1,67 @@
+/* ==========================================================================
+   Agent Bookshelf — a quiet, readable interface for a shelf of books.
+   Vanilla CSS only: custom properties, flexbox, grid. No frameworks.
+   ========================================================================== */
+
+/* --- Design tokens ------------------------------------------------------- */
+
+:root {
+  /* Lets native controls, scrollbars and form widgets follow the theme. */
+  color-scheme: light dark;
+
+  --paper: #faf7f2;
+  --surface: #ffffff;
+  --surface-sunken: #f3efe8;
+  --ink: #201d1a;
+  --ink-soft: #423c35;
+  --ink-muted: #5f5952;
+  --line: #e2dbd0;
+  --line-strong: #cfc5b6;
+
+  --accent: #1a5566;
+  --accent-strong: #123d4a;
+  --accent-wash: #e7f0f3;
+  --star: #a8620a;
+  --danger: #a32b22;
+  --danger-wash: #fbeceb;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 2px rgba(32, 29, 26, 0.05), 0 4px 12px rgba(32, 29, 26, 0.04);
+  --shadow-lift: 0 2px 4px rgba(32, 29, 26, 0.06), 0 10px 24px rgba(32, 29, 26, 0.08);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
+
+  --measure: 68ch;
+  --page: 1160px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1a1917;
+    --surface: #232120;
+    --surface-sunken: #1f1d1c;
+    --ink: #ece7e0;
+    --ink-soft: #d3ccc3;
+    --ink-muted: #a89f95;
+    --line: #35322f;
+    --line-strong: #4a4641;
+
+    --accent: #7ec5d9;
+    --accent-strong: #a5dcec;
+    --accent-wash: #1f3138;
+    --star: #e0a33c;
+    --danger: #f08a80;
+    --danger-wash: #38211f;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.25);
+    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.35), 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* --- Base ---------------------------------------------------------------- */
+
 * {
   margin: 0;
   padding: 0;
@@ -5,161 +69,312 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  line-height: 1.6;
-  color: #333;
-  background: #f5f5f5;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-nav {
-  background: #2c3e50;
-  padding: 1rem 2rem;
-  display: flex;
-  gap: 2rem;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-nav a:hover {
-  color: #3498db;
-}
-
-main {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 2rem;
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: balance;
 }
 
 h1 {
-  margin-bottom: 1.5rem;
-  color: #2c3e50;
+  font-size: clamp(1.75rem, 1.35rem + 1.6vw, 2.35rem);
+  margin-bottom: 1.25rem;
 }
 
 h2 {
-  margin-bottom: 1rem;
-  color: #2c3e50;
+  font-size: 1.4rem;
+  margin-bottom: 0.875rem;
 }
 
 h3 {
+  font-size: 1.15rem;
   margin-bottom: 0.75rem;
-  color: #34495e;
+  color: var(--ink-soft);
 }
 
-.book-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
+p {
+  max-width: var(--measure);
 }
 
-.book-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--accent-strong);
+}
+
+/* One visible, consistent focus ring for every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background: var(--accent-wash);
+  color: var(--ink);
+}
+
+/* --- Layout -------------------------------------------------------------- */
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  gap: 1.75rem;
+  align-items: center;
+  padding: 0.9rem clamp(1rem, 4vw, 2rem);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+nav a {
   position: relative;
-}
-
-.book-card h2 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-}
-
-.book-card a {
-  color: #2c3e50;
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
   text-decoration: none;
 }
 
-.book-card a:hover {
-  color: #3498db;
+nav a::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.1rem;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.18s ease;
+}
+
+nav a:hover,
+nav a:focus-visible {
+  color: var(--ink);
+}
+
+nav a:hover::after,
+nav a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+main {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: clamp(1.75rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem) 4rem;
+}
+
+/* --- Catalog: grid of book cards ----------------------------------------- */
+
+.book-grid,
+.users-list,
+.shelves-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.book-card,
+.user-card,
+.shelf-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.book-card:hover,
+.user-card:hover,
+.shelf-card:hover,
+.book-card:focus-within,
+.user-card:focus-within,
+.shelf-card:focus-within {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-2px);
+}
+
+.book-card h2,
+.user-card h2,
+.shelf-card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.1rem;
+}
+
+.book-card a,
+.shelf-card a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.book-card a:hover,
+.shelf-card a:hover {
+  color: var(--accent);
+  text-decoration: underline;
 }
 
 .author {
-  color: #666;
+  color: var(--ink-muted);
   font-style: italic;
 }
 
-.year, .isbn {
-  color: #999;
-  font-size: 0.9rem;
+.year,
+.isbn,
+.username,
+.book-count,
+.owner {
+  color: var(--ink-muted);
+  font-size: 0.875rem;
 }
 
-.book-detail, .shelf-detail, .review-detail {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.book-card .btn-remove {
+  align-self: flex-start;
+  margin-top: 0.65rem;
+}
+
+/* --- Detail pages -------------------------------------------------------- */
+
+.book-detail,
+.shelf-detail,
+.review-detail {
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.book-detail .author {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
 }
 
 .description {
+  max-width: var(--measure);
   margin: 1.5rem 0;
-  padding: 1rem;
-  background: #f9f9f9;
-  border-left: 4px solid #3498db;
+  padding: 1rem 1.25rem;
+  background: var(--surface-sunken);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
 }
 
-.rating-summary {
-  font-size: 1.2rem;
+.book-info {
   margin: 1rem 0;
 }
 
-.stars {
-  color: #f39c12;
-  letter-spacing: 2px;
+.rating-summary {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.25rem 0;
+  font-size: 1.05rem;
 }
 
+.stars,
+.review-header .rating {
+  color: var(--star);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+/* --- Reviews ------------------------------------------------------------- */
+
 .reviews {
-  margin-top: 2rem;
-  border-top: 2px solid #ecf0f1;
-  padding-top: 1.5rem;
+  margin-top: 2.5rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--line);
 }
 
 .review {
-  background: #f9f9f9;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 4px;
-  border-left: 3px solid #3498db;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 0.875rem;
+  background: var(--surface-sunken);
+  border-left: 3px solid var(--line-strong);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.review:hover {
+  border-left-color: var(--accent);
 }
 
 .review-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}
+
+.review-header strong {
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
 }
 
 .review-header .rating {
-  font-size: 1rem;
-  margin: 0;
-  color: #f39c12;
+  font-size: 0.95rem;
 }
 
 .review-text {
-  margin: 0.5rem 0;
+  max-width: var(--measure);
+  margin: 0.4rem 0;
+  color: var(--ink-soft);
 }
 
 .review-date {
-  color: #999;
-  font-size: 0.85rem;
   margin-top: 0.5rem;
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
 }
 
-.no-reviews, .empty-shelf {
-  color: #999;
+/* --- Empty states -------------------------------------------------------- */
+
+.no-reviews,
+.empty-shelf,
+.no-results {
+  padding: 1.5rem 0;
+  color: var(--ink-muted);
   font-style: italic;
-  padding: 1rem 0;
 }
 
-.add-review, .add-to-shelf {
+/* --- Forms --------------------------------------------------------------- */
+
+.add-review,
+.add-to-shelf {
+  max-width: 34rem;
   margin-top: 2rem;
   padding: 1.5rem;
-  background: #f9f9f9;
-  border-radius: 8px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 
 .form-group {
@@ -168,133 +383,227 @@ h3 {
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #2c3e50;
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-soft);
 }
 
 .form-group select,
 .form-group textarea,
-.form-group input[type="text"] {
+.form-group input[type='text'],
+#search-input {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 0.6rem 0.75rem;
+  font-family: inherit;
   font-size: 1rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.form-group select:hover,
+.form-group textarea:hover,
+.form-group input[type='text']:hover,
+#search-input:hover {
+  border-color: var(--ink-muted);
+}
+
+.form-group select:focus,
+.form-group textarea:focus,
+.form-group input[type='text']:focus,
+#search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-wash);
 }
 
 .form-group textarea {
   resize: vertical;
+  min-height: 6rem;
+  line-height: 1.6;
+}
+
+/* --- Buttons ------------------------------------------------------------- */
+
+.btn-primary,
+.btn-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6rem;
   font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease,
+    transform 0.08s ease;
 }
 
 .btn-primary {
-  background: #3498db;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
+  padding: 0.6rem 1.35rem;
+  color: var(--paper);
+  background: var(--accent);
+  border: 1px solid var(--accent);
 }
 
 .btn-primary:hover {
-  background: #2980b9;
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
 }
 
+.btn-primary:active,
+.btn-remove:active {
+  transform: translateY(1px);
+}
+
+/* Destructive actions stay quiet until you reach for them. */
 .btn-remove {
-  background: #e74c3c;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  margin-top: 0.5rem;
-  transition: background 0.2s;
+  padding: 0.4rem 0.9rem;
+  min-height: 2.2rem;
+  font-size: 0.85rem;
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid var(--line-strong);
 }
 
 .btn-remove:hover {
-  background: #c0392b;
+  color: var(--danger);
+  background: var(--danger-wash);
+  border-color: var(--danger);
 }
 
+/* --- Search -------------------------------------------------------------- */
+
 .search-container {
-  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
 #search-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.2s;
+  flex: 1 1 auto;
+  max-width: 32rem;
+  padding: 0.7rem 0.9rem;
 }
 
-#search-input:focus {
-  outline: none;
-  border-color: #3498db;
-}
+/* --- HTMX states --------------------------------------------------------- */
 
+/*
+ * Reserve the indicator's space so revealing it never nudges the layout.
+ * Covers both wirings: htmx marks the indicator itself when hx-indicator
+ * points at it, and the requesting element otherwise.
+ */
 .htmx-indicator {
-  display: none;
-  color: #999;
+  flex: 0 0 auto;
+  color: var(--ink-muted);
+  font-size: 0.875rem;
   font-style: italic;
-  margin-left: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease;
 }
 
+.htmx-indicator.htmx-request,
 .htmx-request .htmx-indicator {
-  display: inline;
+  opacity: 1;
+  visibility: visible;
 }
 
-.search-message {
-  padding: 2rem;
-  text-align: center;
-  background: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 8px;
-  color: #856404;
+/* A form or button mid-flight reads as busy and cannot be double-fired. */
+form.htmx-request,
+button.htmx-request {
+  opacity: 0.65;
+  cursor: progress;
 }
 
-.users-list, .shelves-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
+form.htmx-request button,
+button.htmx-request {
+  pointer-events: none;
 }
 
-.user-card, .shelf-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* Content being swapped out fades; content swapped in settles into place. */
+.htmx-swapping {
+  opacity: 0.4;
+  transition: opacity 0.15s ease;
 }
 
-.username {
-  color: #666;
-  font-size: 0.9rem;
+.htmx-added {
+  animation: settle-in 0.22s ease both;
 }
 
-.book-count {
-  color: #999;
-  margin-top: 0.5rem;
+@keyframes settle-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
 }
+
+/* --- Errors -------------------------------------------------------------- */
 
 .error {
+  padding: clamp(2rem, 8vw, 4rem) 1rem;
   text-align: center;
-  padding: 3rem;
+}
+
+.error p {
+  max-width: none;
+  color: var(--ink-muted);
 }
 
 .error a {
   display: inline-block;
   margin-top: 1rem;
-  color: #3498db;
+  font-weight: 500;
 }
 
 p.error {
-  color: #e74c3c;
-  padding: 1rem;
-  background: #fdecea;
-  border-radius: 4px;
+  max-width: var(--measure);
+  padding: 0.75rem 1rem;
+  color: var(--danger);
+  background: var(--danger-wash);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+  text-align: left;
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .book-grid,
+  .users-list,
+  .shelves-list {
+    grid-template-columns: 1fr;
+  }
+
+  .search-container {
+    flex-wrap: wrap;
+  }
+
+  #search-input {
+    max-width: none;
+  }
+}
+
+/* --- Motion preferences -------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .book-card:hover,
+  .user-card:hover,
+  .shelf-card:hover {
+    transform: none;
+  }
 }

@@ -1,0 +1,19 @@
+<% if (books.length === 0) { %>
+  <% if (query) { %>
+    <p class="no-results">No books found for "<%= query %>".</p>
+  <% } else { %>
+    <p class="no-results">No books yet.</p>
+  <% } %>
+<% } else { %>
+  <div class="book-grid">
+    <% books.forEach(book => { %>
+      <div class="book-card">
+        <h2><a href="/books/<%= book.id %>"><%= book.title %></a></h2>
+        <p class="author">by <%= book.author %></p>
+        <% if (book.published_year) { %>
+          <p class="year"><%= book.published_year %></p>
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
+<% } %>

@@ -35,14 +35,20 @@ Request flow: `src/server.ts` (Express app, EJS view engine, static `src/public/
 
 **Imports must carry the `.js` extension** (`../models/book.js`) even from `.ts` files — the project is ESM (`"type": "module"`, `module: ES2022`).
 
-## Three "Never-Ever" Rules
+## Code Style & Conventions
 
-1. **NEVER commit `.env` files, API keys, tokens, or any sensitive credentials.**
-   Do not hardcode secrets into source files, test fixtures, or documentation. Rely strictly on existing environment variable patterns, and keep `.env` excluded from version control.
+- Pure functions only in `src/models/*.ts`: export standalone functions receiving `db` as the first parameter. Do not introduce classes, repositories, or ORMs.
+- Database queries: write raw prepared statements via `better-sqlite3` (`db.prepare(...)`). Never assemble SQL strings via dynamic concatenation or template literals.
+- ESM imports: always suffix relative imports with `.js` (e.g., `import { getBookById } from '../models/book.js'`), even inside `.ts` files.
+- Naming conventions: SQLite column names and TypeScript database interface properties use `snake_case`. Standard TypeScript variables and function names use `camelCase`.
+- EJS & HTMX rendering: HTML routes responding to HTMX requests must render isolated partials without header or footer tags.
 
+### Three "Never-Ever" Rules
+
+1. **NEVER modify `src/db/seed.sql` or alter existing table schemas in `schema.sql`.**
+   Test assertions and homework grading rely on exact fixture values (50 books, users Alice/Bob/Carol, ID 1 as "The Pragmatic Programmer"). Changing seeds or schemas breaks baseline tests across the suite.
 2. **NEVER touch or "fix" code listed under "Deliberate gaps" unless explicitly instructed.**
    Do not add validation libraries, style overhauls, or missing tests unprompted. In this teaching repo, missing features are homework assignments for students, not bugs to clean up.
-
 3. **NEVER install new npm packages or external client libraries.**
    Solve tasks strictly using the existing dependency tree and standard library. Do not pull in ORMs, query builders, test runners, or CSS frameworks.
 

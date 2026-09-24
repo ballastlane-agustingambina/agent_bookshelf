@@ -26,10 +26,12 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
+    "@qdrant/js-client-rest": "^1.19.0",
     "better-sqlite3": "^11.7.0",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "htmx.org": "^1.9.12"
+    "htmx.org": "^1.9.12",
+    "ollama": "^0.6.3"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",

@@ -1,0 +1,42 @@
+@baseUrl = http://localhost:3000
+
+# Memory Bank — POST /api/chat
+#
+# Wired in src/routes/chat.ts (mounted at /api in src/server.ts). Calls
+# chatWithMemory() (src/core/agent.ts), which does, per request:
+#   1. recall(userInput)  — embed the input, query Qdrant for the top-3
+#      most similar past exchanges.
+#   2. Build a system prompt from those recalled exchanges + call Ollama
+#      (chat model) with the user's message.
+#   3. remember(`User: ... | AI: ...`) — embed and store this exchange in
+#      Qdrant for future recall.
+# So memory accumulates across requests: the first message below has
+# nothing to recall yet; by the second, the first exchange is in Qdrant
+# and should show up in the AI's answer.
+#
+# Requires: `docker compose up -d` (Qdrant) and both Ollama models pulled
+# (see docs/local_llm_memory_bank_guide.md) before starting `npm run dev`.
+
+### Store context: tell it your favorite book
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "message": "Hi, my name is Alex and my favorite book on this shelf is Dune."
+}
+
+### Recall: ask it back — should mention Dune
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "message": "What did I say my favorite book was?"
+}
+
+### Error case: empty message
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "message": ""
+}

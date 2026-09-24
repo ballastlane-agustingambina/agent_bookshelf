@@ -1,0 +1,27 @@
+@baseUrl = http://localhost:3000
+
+### Get all users
+GET {{baseUrl}}/api/users
+
+### Get user by id
+GET {{baseUrl}}/api/users/1
+
+### Create a user
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "username": "dave",
+  "displayName": "Dave Thomas"
+}
+
+### Update a user
+PATCH {{baseUrl}}/api/users/1
+Content-Type: application/json
+
+{
+  "displayName": "Alice Updated"
+}
+
+### Delete a user
+DELETE {{baseUrl}}/api/users/1

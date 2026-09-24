@@ -1,0 +1,33 @@
+@baseUrl = http://localhost:3000
+
+### Get reviews for a book
+GET {{baseUrl}}/api/reviews/book/1
+
+### Get reviews by a user
+GET {{baseUrl}}/api/reviews/user/1
+
+### Get review by id
+GET {{baseUrl}}/api/reviews/1
+
+### Create a review
+POST {{baseUrl}}/api/reviews
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "bookId": 2,
+  "rating": 5,
+  "reviewText": "A must-read for every professional developer."
+}
+
+### Update a review
+PATCH {{baseUrl}}/api/reviews/1
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "reviewText": "Still great on a re-read, minor nitpicks."
+}
+
+### Delete a review
+DELETE {{baseUrl}}/api/reviews/1

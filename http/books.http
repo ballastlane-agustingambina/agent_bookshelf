@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:3000
+
+### Get all books
+GET {{baseUrl}}/api/books
+
+### Search books
+GET {{baseUrl}}/api/books?q=pragmatic
+
+### Get book by id
+GET {{baseUrl}}/api/books/1
+
+### Create a book
+POST {{baseUrl}}/api/books
+Content-Type: application/json
+
+{
+  "title": "Clean Architecture",
+  "author": "Robert C. Martin",
+  "isbn": "9780134494166",
+  "cover_url": "https://example.com/covers/clean-architecture.jpg",
+  "description": "A craftsman's guide to software structure and design.",
+  "published_year": 2017
+}
+
+### Update a book
+PATCH {{baseUrl}}/api/books/1
+Content-Type: application/json
+
+{
+  "description": "Updated description for The Pragmatic Programmer."
+}
+
+### Delete a book
+DELETE {{baseUrl}}/api/books/1

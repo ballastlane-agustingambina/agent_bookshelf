@@ -1,0 +1,30 @@
+@baseUrl = http://localhost:3000
+
+### Get shelves for a user
+GET {{baseUrl}}/api/shelves/user/1
+
+### Get shelf with books by id
+GET {{baseUrl}}/api/shelves/1
+
+### Create a shelf
+POST {{baseUrl}}/api/shelves
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "name": "Currently Reading"
+}
+
+### Delete a shelf
+DELETE {{baseUrl}}/api/shelves/1
+
+### Add a book to a shelf
+POST {{baseUrl}}/api/shelves/1/books
+Content-Type: application/json
+
+{
+  "bookId": 2
+}
+
+### Remove a book from a shelf
+DELETE {{baseUrl}}/api/shelves/1/books/2

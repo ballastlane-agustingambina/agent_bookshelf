@@ -155,3 +155,6 @@ dist/
 *.sqlite-wal
 *.sqlite3-shm
 *.sqlite3-wal
+
+# Qdrant local storage (vector DB data volume)
+qdrant_storage/

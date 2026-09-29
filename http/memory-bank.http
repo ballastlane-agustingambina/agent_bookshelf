@@ -33,10 +33,34 @@ Content-Type: application/json
   "message": "What did I say my favorite book was?"
 }
 
-### Error case: empty message
+### Error case: empty message — 400
 POST {{baseUrl}}/api/chat
 Content-Type: application/json
 
 {
   "message": ""
+}
+
+### Error case: whitespace-only message (trimmed to empty) — 400
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "message": "   "
+}
+
+### Error case: missing message field — 400
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "text": "Wrong field name"
+}
+
+### Error case: non-string message — 400
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "message": 42
 }

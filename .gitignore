@@ -158,3 +158,6 @@ dist/
 
 # Qdrant local storage (vector DB data volume)
 qdrant_storage/
+
+# macOS
+.DS_Store

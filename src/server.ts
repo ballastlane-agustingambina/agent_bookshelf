@@ -7,6 +7,7 @@ import shelvesRouter from './routes/shelves.js';
 import reviewsRouter from './routes/reviews.js';
 import apiRouter from './routes/api.js';
 import chatRouter from './routes/chat.js';
+import chatViewRouter from './routes/chatView.js';
 
 // 1. Import the MemoryBank service
 import MemoryBank from './services/memoryBank.js';
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 app.use('/', booksRouter);
 app.use('/shelves', shelvesRouter);
 app.use('/reviews', reviewsRouter);
+app.use('/chat', chatViewRouter);
 app.use('/api', apiRouter);
 app.use('/api', chatRouter);
 

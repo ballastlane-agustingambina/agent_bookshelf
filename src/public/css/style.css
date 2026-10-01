@@ -491,6 +491,41 @@ main {
   padding: 0.7rem 0.9rem;
 }
 
+/* --- Chat ------------------------------------------------------------------ */
+
+.chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.chat-message {
+  max-width: 34rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+}
+
+.chat-message p {
+  max-width: none;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  color: var(--paper);
+  background: var(--accent);
+}
+
+.chat-message.assistant {
+  align-self: flex-start;
+  background: var(--surface-sunken);
+  border: 1px solid var(--line);
+}
+
+.chat-form {
+  max-width: 34rem;
+}
+
 /* --- HTMX states --------------------------------------------------------- */
 
 /*

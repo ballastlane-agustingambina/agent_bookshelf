@@ -128,6 +128,20 @@ describe('API Routes', () => {
       );
     });
 
+    it('rejects a non-string isbn', async () => {
+      expectValidationError(
+        await request(app).post('/api/books').send({ ...validBook, isbn: 123 }),
+        /isbn must be a string or null/
+      );
+    });
+
+    it('rejects a non-string cover_url', async () => {
+      expectValidationError(
+        await request(app).post('/api/books').send({ ...validBook, cover_url: true }),
+        /cover_url must be a string or null/
+      );
+    });
+
     it('rejects a non-integer published_year', async () => {
       expectValidationError(
         await request(app).post('/api/books').send({ ...validBook, published_year: 'soon' }),
@@ -201,6 +215,13 @@ describe('API Routes', () => {
 
       expect(res.status).toBe(200);
       expect(res.body.description).toBeNull();
+    });
+
+    it('rejects a non-string description', async () => {
+      expectValidationError(
+        await request(app).patch('/api/books/1').send({ description: 42 }),
+        /description must be a string or null/
+      );
     });
 
     it('rejects an empty body', async () => {

@@ -17,6 +17,10 @@ npm run test:run       # vitest once (use this in agent workflows)
 
 npx vitest run tests/models/book.test.ts          # single file
 npx vitest run -t "returns a book by id"          # single test by name
+
+npm run test:e2e        # Playwright e2e tests (auto-starts the dev server)
+npm run test:e2e:ui     # Playwright UI runner
+npm run test:e2e:report # open the last HTML report
 ```
 
 `bin/agent-bookshelf.js` (the published `npx agent-bookshelf` entry) shells out to `npx tsx src/server.ts` — it runs TypeScript directly and does **not** use `dist/`.
@@ -51,6 +55,7 @@ Request flow: `src/server.ts` (Express app, EJS view engine, static `src/public/
    Do not add validation libraries, style overhauls, or missing tests unprompted. In this teaching repo, missing features are homework assignments for students, not bugs to clean up.
 3. **NEVER install new npm packages or external client libraries.**
    Solve tasks strictly using the existing dependency tree and standard library. Do not pull in ORMs, query builders, test runners, or CSS frameworks.
+   **Exception:** `@playwright/test` is permitted, scoped strictly to browser/e2e testing under `e2e/` (see "E2E Testing (Playwright)" below). This is the only approved addition to the dependency tree; the rule otherwise still stands.
 
 ### Views / HTMX
 
@@ -65,6 +70,10 @@ Seed data is fixed and tests assert on it: 50 books, 3 users (alice/bob/carol), 
 ## Testing
 
 Vitest, `globals: true`, node environment, `tests/**/*.test.ts`. Each test file opens its **own** temp DB path under `/tmp` in `beforeEach` (via `initDb`) and unlinks it in `afterEach` — reuse that pattern with a distinct path per file, since the DB connection is a global singleton. API tests import the default-exported `app` from `src/server.ts` and drive it with `supertest` (importing `app` does not start a listener; `startServer()` does).
+
+### E2E Testing (Playwright)
+
+Real-browser tests live in `e2e/` (sibling to `tests/`, not inside it — Vitest's `include` glob only matches `tests/**/*.test.ts`, so the two runners never pick up each other's files). `playwright.config.ts` at the project root starts the app itself via `npm run dev` (`webServer`, reusing the existing dev server on `:3000`) before running specs, so no separate server-bootstrap code is needed. Specs assert against the fixed seed data read-only (e.g. book id 1 = "The Pragmatic Programmer") — never mutate `seed.sql`/`schema.sql` from a spec (Never-Ever Rule #1).
 
 ## Deliberate gaps
 

@@ -159,5 +159,10 @@ dist/
 # Qdrant local storage (vector DB data volume)
 qdrant_storage/
 
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
 # macOS
 .DS_Store

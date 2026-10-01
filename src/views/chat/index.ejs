@@ -1,0 +1,23 @@
+<%- include('../partials/header') %>
+
+<h1>Chat</h1>
+
+<div id="chat-log" class="chat-log"></div>
+
+<form
+  class="chat-form"
+  hx-post="/chat/messages"
+  hx-target="#chat-log"
+  hx-swap="beforeend"
+  hx-indicator=".htmx-indicator"
+  hx-on::after-request="if(event.detail.successful) this.reset()"
+>
+  <div class="form-group">
+    <label for="message">Message</label>
+    <textarea name="message" id="message" required placeholder="Ask about a book..."></textarea>
+  </div>
+  <button type="submit" class="btn-primary">Send</button>
+  <span class="htmx-indicator">Thinking…</span>
+</form>
+
+<%- include('../partials/footer') %>
